@@ -30,3 +30,12 @@ rebuild:  ## Force-rebuild the image from scratch and restart
 
 open:  ## Open the dashboard in your browser
 	@open http://localhost:$(PORT) 2>/dev/null || xdg-open http://localhost:$(PORT) 2>/dev/null || echo "Open http://localhost:$(PORT) in your browser"
+
+scrape:  ## Run the daily scraper immediately (test without waiting for 7 AM)
+	@bash scripts/run-now.sh
+
+schedule:  ## Install the daily 7 AM launchd schedule (macOS)
+	@bash scripts/install-schedule.sh
+
+unschedule:  ## Remove the daily schedule
+	@bash scripts/uninstall-schedule.sh

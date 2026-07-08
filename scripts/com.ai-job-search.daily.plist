@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ai-job-search.daily</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>__BUN_PATH__</string>
+        <string>run</string>
+        <string>__PROJECT_ROOT__/scripts/daily-scrape.ts</string>
+    </array>
+
+    <!-- Run at 7:00 AM every day -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>7</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>__PROJECT_ROOT__</string>
+
+    <key>StandardOutPath</key>
+    <string>__PROJECT_ROOT__/logs/daily-scrape.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__PROJECT_ROOT__/logs/daily-scrape.error.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>__BUN_DIR__:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>__HOME__</string>
+        <!-- Add your API keys here after running install-schedule.sh -->
+        <key>RESEND_API_KEY</key>
+        <string>__RESEND_API_KEY__</string>
+        <key>NOTIFY_EMAIL</key>
+        <string>__NOTIFY_EMAIL__</string>
+        <!-- Optional: uncomment if you use USAJobs -->
+        <!-- <key>USAJOBS_API_KEY</key> -->
+        <!-- <string>__USAJOBS_API_KEY__</string> -->
+        <!-- <key>USAJOBS_EMAIL</key> -->
+        <!-- <string>__USAJOBS_EMAIL__</string> -->
+    </dict>
+
+    <!-- Re-run immediately if the machine was asleep at scheduled time -->
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
