@@ -1,0 +1,14 @@
+{
+  "name": "job-search-dashboard",
+  "version": "1.0.0",
+  "description": "Local dashboard for browsing and tracking job search results.",
+  "type": "module",
+  "scripts": {
+    "start": "bun run server.ts",
+    "dev": "bun run --watch server.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

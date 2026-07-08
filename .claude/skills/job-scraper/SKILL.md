@@ -1,30 +1,30 @@
 ---
 name: job-scraper
 description: >
-  Scrapes Danish job sites for new positions matching your profile. Deduplicates across runs.
-  Triggers on: job scrape, find jobs, search jobs, new jobs, job search, scrape jobs, /scrape
-allowed-tools: Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Agent, AskUserQuestion
+  Searches multiple US job boards for new positions matching the candidate profile.
+  Deduplicates across runs. Triggers on: job scrape, find jobs, search jobs, new jobs,
+  job search, scrape jobs, /scrape, any new jobs, what's out there.
+allowed-tools: >
+  Read, Write, Edit, Glob, Grep, WebFetch, WebSearch, Agent, AskUserQuestion,
+  Bash(~/.bun/bin/bun run .agents/skills/linkedin-search/cli/src/cli.ts *),
+  Bash(~/.bun/bin/bun run .agents/skills/indeed-search/cli/src/cli.ts *),
+  Bash(~/.bun/bin/bun run .agents/skills/greenhouse-search/cli/src/cli.ts *),
+  Bash(~/.bun/bin/bun run .agents/skills/usajobs-search/cli/src/cli.ts *)
 ---
 
 # Job Scraper
 
----
-
-## How It Works
-
-This skill searches multiple Danish job sites using targeted queries based on your profile, deduplicates against previously seen jobs and the application tracker, and presents new matches with a quick fit assessment.
+Searches LinkedIn, Indeed, Greenhouse (target companies), and USAJobs for new
+openings. CLI tools return clean JSON — no per-result WebFetch required. Results
+are deduplicated against `job_scraper/seen_jobs.json` and `job_search_tracker.csv`.
 
 ## Invocation
 
-The user triggers this skill by saying things like:
-- "Find new jobs"
-- "Scrape for jobs"
-- "Any new positions?"
-- "/scrape"
-
-Optional arguments:
-- A focus area, e.g. "/scrape data science" or "/scrape geophysics"
-- "broad" to run all search categories, e.g. "/scrape broad"
+- `/scrape` — run default queries from `search-queries.md`
+- `/scrape [focus]` — focus on a specific keyword (e.g. `/scrape ML engineer`)
+- `/scrape broad` — run all query categories (default runs top 3)
+- `/scrape greenhouse` — only check Greenhouse company boards
+- `/scrape usajobs` — only check federal jobs
 
 ---
 
@@ -32,94 +32,156 @@ Optional arguments:
 
 ### Step 0: Load State
 
-1. Read `job_scraper/seen_jobs.json` (create if missing - start with `{"seen": {}}`)
-2. Read `job_search_tracker.csv` to extract already-applied companies+roles
-3. Read `search-queries.md` (this directory) for the search strategy
+Read these **three** files in parallel before anything else:
 
-### Step 1: Search
+1. `.claude/skills/job-scraper/search-queries.md` — query config and Greenhouse targets
+2. `job_scraper/seen_jobs.json` — previously seen jobs (create if missing: `{"seen": {}}`)
+3. `job_search_tracker.csv` — already-applied jobs
 
-Run **WebSearch** queries from `search-queries.md`. By default, run the top 3 priority categories. If the user said "broad", run all categories.
+Hold all three in context. Do not re-read them.
 
-If the user specified a focus area (e.g. "data science"), prioritize queries from that category.
+---
 
-For each search:
-- Use `WebSearch` with site-specific queries (jobindex.dk, linkedin.com/jobs, karriere.dk, etc.)
-- Target your configured geographic area
-- Look for postings from the last 14 days
+### Step 1: Run CLI Tools (Parallel)
 
-### Step 2: Fetch & Parse
+Run the four CLI tools in **parallel** using the queries from `search-queries.md`.
+All tools output JSON to stdout. Capture and parse the `results` array from each.
 
-For each promising result from Step 1:
-- Use `WebFetch` to retrieve the job posting page
-- Extract: **job title**, **company**, **location**, **posting date** (or "recent"), **URL**, **key requirements** (brief), **application deadline** (if listed)
-- Skip if the URL or company+title combo already exists in `seen_jobs.json`
-- Skip if the company+role already appears in `job_search_tracker.csv`
+If the user specified a focus area, use that as the `--query` value instead of the
+defaults from `search-queries.md`.
+
+#### LinkedIn
+```bash
+~/.bun/bin/bun run .agents/skills/linkedin-search/cli/src/cli.ts search \
+  -q "[KEYWORD]" -l "[LOCATION]" --jobage 14 --format json
+```
+
+#### Indeed
+```bash
+~/.bun/bin/bun run .agents/skills/indeed-search/cli/src/cli.ts search \
+  -q "[KEYWORD]" -l "[LOCATION]" --jobage 14 --format json
+```
+
+#### Greenhouse (run for each company in `target-companies` list)
+```bash
+~/.bun/bin/bun run .agents/skills/greenhouse-search/cli/src/cli.ts search \
+  --company [SLUG] -q "[KEYWORD]" --format json
+```
+
+Run Greenhouse searches in parallel — one per company. Merge all results.
+
+#### USAJobs
+```bash
+~/.bun/bin/bun run .agents/skills/usajobs-search/cli/src/cli.ts search \
+  -q "[KEYWORD]" --jobage 14 --format json
+```
+
+**Error handling**: If a CLI tool exits non-zero, log the error from stderr but
+continue with results from other sources. Never abort the full run for one source.
+
+---
+
+### Step 2: Merge and Deduplicate
+
+Collect all `results` arrays from Step 1 into a single flat list. Each result has
+at minimum: `{ id, title, company, location, date, url }`.
+
+Deduplicate using this priority order:
+1. **URL match** — exact URL already in `seen_jobs.json`
+2. **Company + title match** — same company+role already in `seen_jobs.json` or `job_search_tracker.csv`
+
+Tag each result with its source: `linkedin`, `indeed`, `greenhouse`, or `usajobs`.
+
+---
 
 ### Step 3: Quick Fit Assessment
 
-For each new job, do a rapid fit check (NOT the full evaluation from `04-job-evaluation.md` - just a quick signal):
+For each **new** (not deduplicated) result, do a rapid fit check based on the
+candidate profile in `CLAUDE.md`. Do NOT run the full evaluation — just:
 
-- **High match**: Role directly involves your core skills
-- **Medium match**: Role is adjacent to your experience
-- **Low match**: Role requires significant skills you lack
+- **High**: Role directly uses core skills, strong alignment
+- **Medium**: Adjacent role, partial skill match
+- **Low**: Significant skill gap or misaligned direction
 
-### Step 4: Deduplicate & Store
+You can assess from the `title`, `company`, `location`, and `department`/`grade`
+fields in the JSON. Only WebFetch the posting page if the title alone is ambiguous
+and a quick fetch would meaningfully change the fit assessment.
 
-1. Add ALL fetched jobs (new and skipped) to `seen_jobs.json` with structure:
+---
+
+### Step 4: Update seen_jobs.json
+
+Add ALL results (new and already-seen) to `seen_jobs.json` with:
+
 ```json
 {
   "seen": {
-    "<url_or_company_title_key>": {
+    "<url>": {
       "title": "...",
       "company": "...",
+      "source": "linkedin|indeed|greenhouse|usajobs",
       "url": "...",
       "first_seen": "YYYY-MM-DD",
-      "fit": "high/medium/low",
-      "status": "new/skipped/evaluated/ranked/expired"
+      "fit": "high|medium|low",
+      "status": "new|skipped|evaluated|ranked|expired"
     }
   }
 }
 ```
-2. Only present jobs NOT already in the seen list or tracker.
+
+Write the updated file before presenting results.
+
+---
 
 ### Step 5: Present Results
 
-Present new jobs in a table sorted by fit (high first):
+Present **only new results** (not previously seen), sorted by fit (high first):
 
 ```
-## New Job Matches - YYYY-MM-DD
+## New Job Matches — YYYY-MM-DD
 
-Found X new positions (Y high, Z medium, W low match).
+Found X new positions across Y sources (A high, B medium, C low match).
+Sources: LinkedIn (N), Indeed (N), Greenhouse (N), USAJobs (N).
 
-| # | Fit | Title | Company | Location | Deadline | URL |
-|---|-----|-------|---------|----------|----------|-----|
-| 1 | High | ... | ... | ... | ... | [Link](...) |
+| # | Fit | Title | Company | Location | Source | Date | URL |
+|---|-----|-------|---------|----------|--------|------|-----|
+| 1 | ⬆ High | ... | ... | ... | LinkedIn | ... | [Link](...) |
+| 2 | — Med | ... | ... | ... | Indeed | ... | [Link](...) |
+...
+```
 
-### High-Match Highlights
-For each high-match job, add 2-3 bullet points:
-- Why it matches your profile
-- Key requirements to check
-- Any red flags
+For each **High** match, add a brief highlight block:
+```
+**#1 — [Title] @ [Company]**
+- Why it fits: ...
+- Check: ...
 ```
 
 After presenting, ask:
-> "Want me to evaluate any of these in detail? Just give me the number(s)."
+> "Want me to evaluate any of these in detail? Give me the number(s), or say 'all high'."
 
-If the user picks a number, invoke the **job-application-assistant** skill workflow (fit evaluation first, then CV + cover letter if approved).
+If the user picks a number, invoke the **job-application-assistant** skill workflow
+(fit evaluation first, then CV + cover letter if approved).
 
-If the run found many new jobs (roughly 8+), also suggest `/rank` - it batch-scores all new postings against the full fit framework and returns a ranked shortlist, which beats eyeballing a long table. (`/rank` sets the `ranked` and `expired` status values in `seen_jobs.json`; treat both as already-seen for dedup purposes.)
+If 8+ new jobs found, also suggest `/rank` to batch-score them against the full
+fit framework and return a ranked shortlist.
+
+---
 
 ### Step 6: Update Tracker (Optional)
 
-If the user decides to apply to any job, add a row to `job_search_tracker.csv`.
+If the user decides to apply, add a row to `job_search_tracker.csv`.
 
 ---
 
 ## Important Rules
 
-1. **Never fabricate job postings.** Only present jobs found via actual WebSearch/WebFetch results.
-2. **Respect deduplication.** Always check seen_jobs.json AND job_search_tracker.csv before presenting.
-3. **Focus on configured geographic area.** Skip jobs that require relocation or are clearly outside commute range.
-4. **Only open positions.** Skip postings with expired deadlines or those marked as closed.
-5. **Be efficient with WebFetch.** Don't fetch every search result - use titles and snippets to pre-filter before fetching.
-6. **Parallel searches.** Use the Agent tool or parallel WebSearch calls to speed up the search phase.
+1. **Never fabricate job postings.** Only present real results from CLI tools or
+   WebSearch/WebFetch.
+2. **Respect deduplication.** Always check `seen_jobs.json` AND `job_search_tracker.csv`.
+3. **CLI tools first.** Prefer structured CLI output over ad-hoc WebSearch/WebFetch
+   scraping — it's faster, more reliable, and already normalized.
+4. **Only new positions.** Skip anything with an expired `deadline` or status `closed`.
+5. **Parallel execution.** Run CLI tools in parallel via the Agent tool or simultaneous
+   Bash calls to minimize total wall-clock time.
+6. **Graceful degradation.** A single CLI tool failing should not cancel the run.

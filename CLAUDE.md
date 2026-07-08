@@ -1,10 +1,7 @@
-# Job Application Assistant for [YOUR_NAME]
-
-<!-- SETUP: This file is populated by running /setup -->
-<!-- After running /setup, all [PLACEHOLDER] tokens will be replaced with your actual information -->
+# Job Application Assistant for Jay Webster
 
 ## Role
-This repo is a job application workspace. Claude acts as a career advisor and application assistant for [YOUR_NAME], helping with:
+This repo is a job application workspace. Claude acts as a career advisor and application assistant for Jay Webster, helping with:
 1. **Job fit evaluation** - Assess job postings against your profile (skills, experience, behavioral traits)
 2. **CV tailoring** - Adapt existing CV templates (LaTeX/moderncv) to target specific roles
 3. **Cover letter writing** - Draft targeted cover letters using existing templates (LaTeX)
@@ -13,68 +10,121 @@ This repo is a job application workspace. Claude acts as a career advisor and ap
 
 ## Candidate Profile
 
-<!-- This section is auto-populated by /setup. You can also fill it in manually. -->
-
 ### Identity
-- **Name:** [YOUR_NAME]
-- **Location:** [YOUR_CITY], [YOUR_COUNTRY] ([YOUR_COMMUTE_CONSTRAINTS])
-- **Languages:** [YOUR_LANGUAGES]
-- **Status:** [YOUR_EMPLOYMENT_STATUS]
-- **LinkedIn headline:** "[YOUR_LINKEDIN_HEADLINE]"
+- **Name:** Jay Webster
+- **Location:** Cincinnati, OH (open to remote or relocation for the right opportunity)
+- **Phone:** (650) 430-2394
+- **Email:** jay@activelab.com
+- **LinkedIn:** linkedin.com/in/jwebster
+- **Languages:** English
+- **Status:** Employed (AdRoll CTO since 5/2026; ActiveLab Founder ongoing); selectively exploring C-suite opportunities
+- **LinkedIn headline:** "Senior Operations, Product & Technology Executive"
 
 ### Education
-<!-- List your degrees, most recent first -->
-- **[DEGREE_LEVEL] in [FIELD]** ([YEAR_START]-[YEAR_END]) - [INSTITUTION]
-  - Thesis: "[THESIS_TITLE]"
-  - Topics: [KEY_TOPICS]
+- **Bachelor of Arts (BA) in Biology** (1997) — University of California, Santa Cruz (Santa Cruz, CA)
 
 ### Professional Experience
-<!-- List your roles, most recent first -->
-- **[JOB_TITLE]** ([START_DATE] - [END_DATE]) - **[COMPANY]** ([LOCATION])
-  - [KEY_RESPONSIBILITY_1]
-  - [KEY_RESPONSIBILITY_2]
-  - [KEY_ACHIEVEMENT]
+
+- **Chief Technology Officer** (5/2026 – present) — **AdRoll** (San Francisco, CA) [$100M revenue, Foundation Capital]
+  - Leading technical transformation from RTB retargeting display company to agentic orchestration platform
+
+- **Chief Product & Technology Officer** (5/2025 – 5/2026) — **NaviStone** (Cincinnati, OH) [$20M revenue, CincyTech]
+  - Led transformation from marketing services agency to API-first software company
+  - New design incorporated agentic framework, MCP architecture, media orchestration, and genAI features for segmentation, creative optimization, MMM, and data interrogation
+  - Built The Forge: integrated SDD environment combining modular AI skills with high-performance code indexing to automate the development lifecycle; monorepo providing real-time, context-aware harness for generating and verifying code against precise specifications
+
+- **Founder & President** (1/2024 – present) — **ActiveLab, LLC** (Cincinnati, OH) [independent consulting]
+  - Designing and developing enterprise data infrastructure for a publicly traded events company (consolidating 13 external systems)
+  - Advisor/consultant to Wildtype Advocates: custom LLM and RAG for precision medicine SaaS platform
+  - Board advisor: PropelPR, EZNewswire, Synthesis Healthcare, Goodhands Group
+
+- **President, Chief Product & Technology Officer** (1/2021 – 1/2024) — **Cision, Inc.** (Chicago, IL) [$1B revenue, Platinum Equity]
+  - P&L responsibility for $300M Comms Cloud business; global team of 1,300 across sales, CX, FP&A, product marketing, PMO, and engineering
+  - Designed and launched CisionOne — singular go-forward platform; UK, US, Canada in 2023; lead and demo volume surpassed historical levels by 400%
+  - Launched Buzzsumo small business product via PLG GTM; generated $5M in revenue
+  - Led product and technical diligence on acquisitions of Brandwatch, Factmata, and Streem
+  - Secured eight-year exclusive partnership with Dow Jones
+  - Conceptualized and launched Connectively (creator/influencer platform); significant cost savings through automation and self-serve
+  - Delivered AI-based features transforming media monitoring, sentiment analysis, brand reputation, and media relations
+  - Rebuilt entire global leadership team across product, engineering, PMO, product marketing, and product operations; delivered 5% net growth in declining BU; $18M in cost savings in 2023
+
+- **EVP Product & Engineering** (1/2014 – 6/2020) — **Valassis Corp.** (Austin, TX / San Francisco, CA) [$2B revenue, McAndrews & Forbes]
+  - Global product and technology responsibility for $2B revenue; 7% top-line growth in 2019; 10% EBITDA gains three consecutive years
+  - Grew in-house DSP to 120B auctions/day across 10 exchanges — largest privately held DSP; grew revenue 220% over 30 months ($46M → $221M)
+  - Enabled Valassis as a leading digital shopper marketing provider for Pepsi, Mondelez, Johnson & Johnson, Coca-Cola
+  - Led diligence and integration of Maxpoint acquisition; established 350-person R&D team
+  - M&A diligence on 30+ companies; consummated deals with Maxpoint, RetailMeNot, LocalFlavor, and Spotzot
+  - Launched SEM and Social Influencer lines of business, each generating $20M in year one; $40M total net new first-year revenue
+  - Product of the Year at The Sammys (2019 & 2020) for Valassis Consumer Graph
+
+- **President & Co-Founder** (5/2012 – 1/2014) — **Choose Energy** (San Francisco, CA) [Kleiner Perkins]
+  - Built consumer and commercial energy comparison marketplace; 25% MoM revenue growth in final six months
+  - Secured $4M Series A (Kleiner Perkins, Stephens Capital) and $7.5M Series B (Kleiner Perkins, Stephens Capital, NGEN, Bluescape, GDF Suez)
+  - Acquired by Red Ventures
+
+- **Chief Product Officer** (7/2011 – 5/2012) — **Sharethrough** (San Francisco, CA) [Northbridge VC]
+  - Hired by investors to mentor and grow Stanford-origin native advertising startup
+  - Secured $5M Series B; reorganized product & engineering under new VP
+  - Delivered native advertising product strategy: third-party integration, measurement, fraud elimination
+  - Acquired by District M
+
+- **Chief Product Officer** (10/2009 – 7/2011) — **Quova** (Mountain View, CA) [acquired by Neustar, $1.25B market cap]
+  - Hired by investors to reposition stagnant company for acquisition
+  - 29 discrete projects against $4M budget; launched developer/brand SaaS; 10% annual revenue increase
+  - Represented R&D in sale of Quova to Neustar (Dec 2010)
 
 ### Technical Skills
-- **Primary:** [YOUR_PRIMARY_SKILLS]
-- **Secondary:** [YOUR_SECONDARY_SKILLS]
-- **Domain:** [YOUR_DOMAIN_EXPERTISE]
-- **Software:** [YOUR_TOOLS_AND_SOFTWARE]
+- **Primary:** Technology leadership (CTO/CPO/CPTO), product strategy, agentic AI systems and orchestration, B2B SaaS platform architecture, AI/ML product integration, P&L management
+- **Secondary:** M&A due diligence and integration, PLG (product-led growth), programmatic advertising / DSP, performance marketing (SEM, social), organizational design, GTM strategy
+- **Domain:** AdTech/MarTech, DSP and programmatic advertising, media monitoring and PR tech, shopper marketing, CPG, deregulated energy marketplace, data infrastructure, precision medicine (advisory)
+- **Tools/Platforms:** Claude Code, LLM/AI frameworks, MCP (Model Context Protocol), agentic development environments, RTB/DSP infrastructure, SaaS analytics
 
-### Certifications
-<!-- List relevant certifications with dates -->
-- **[CERTIFICATION_NAME]** - [HOURS]h - completed [DATE]
-
-### Publications
-<!-- List peer-reviewed publications, if any -->
-- [AUTHOR_LIST] ([YEAR]). [TITLE]. [JOURNAL].
+### Patents
+- **USPTO Patent 11,010,778** — Blockchain coupon minter (2021)
+- **USPTO Patent 8,838,733** — System for managing internet domain based on geographic location (2019)
 
 ### Awards
-<!-- List relevant awards, hackathons, competitions -->
-- [AWARD_NAME] - [EVENT] ([YEAR])
+- Gold Stevie Winner — Technology Excellence, New Product of the Year for CisionOne (2024)
+- G2 Awards — Best Usability, Best Meets Requirements, Leader for CisionOne (2024)
+- Martech Breakthrough Awards — Best Media Monitoring Solution for CisionOne (2024)
+- Product of the Year — Business Intelligence Group, The Sammys (2019 & 2020) — Valassis Consumer Graph
+
+### Career Highlights
+- $500M+ in exits (Choose Energy → Red Ventures; Quova → Neustar; Sharethrough → District M)
+- Turned around Cision BU in decline; 5% net growth; $18M in cost savings
+- Grew Valassis DSP from $46M to $221M over five years; largest privately held DSP at 120B auctions/day
 
 ### Behavioral Profile
-<!-- Your behavioral assessment results (PI, DISC, Myers-Briggs, or self-assessment) -->
-- **[TRAIT_1]** - [DESCRIPTION]
-- **[TRAIT_2]** - [DESCRIPTION]
-- **Strengths:** [YOUR_STRENGTHS]
-- **Growth areas:** [YOUR_GROWTH_AREAS]
-- **Thrives in:** [YOUR_IDEAL_ENVIRONMENT]
+<!-- Review and update — inferred from resume patterns below -->
+- **Driver / Builder** — Repeatedly recruited into transformation and turnaround mandates; bias toward measurable outcomes
+- **Entrepreneurial** — Founded and co-founded companies; secured VC financing; comfortable with ambiguity and high-stakes decisions
+- **Strategic + Tactical** — Comfortable at board level (M&A, financing, partnerships) and execution level (platform delivery, team building)
+- **Strengths:** Organizational transformation, team building, strategic M&A, revenue growth, platform architecture, agentic AI product vision
+- **Growth areas:** Finance depth — good at FP&A and strategy, needs to be great. Held a $250M global P&L as President at Cision with 1,300 people; wants to return to that scope and is actively deepening financial acuity to do so credibly
+- **Thrives in:** High-growth or transformation environments; venture-backed, founder-led, or PE-backed companies; fast-paced C-suite roles with real ownership and P&L accountability
 
 ### What Excites You
-<!-- What motivates you professionally -->
-- [PASSION_1]
-- [PASSION_2]
+- Agentic AI at scale — building AI orchestration products with real market impact, not bolted-on features
+- PE/VC transformation mandates — coming in with a defined value-creation thesis, fixing or scaling something with urgency
+- M&A as a core part of the role — diligence, acquisitions, integrations; has done this across 30+ transactions
+- Returning to President/GM scope — full P&L ownership, cross-functional leadership, and board-level accountability
 
 ### Target Sectors
-<!-- Industries and companies you're targeting -->
-- [SECTOR_1]: [EXAMPLE_COMPANIES]
-- [SECTOR_2]: [EXAMPLE_COMPANIES]
+<!-- Review and refine — inferred from career history -->
+- **AI-native / agentic platforms:** Companies building AI orchestration, agents, or LLM-powered products at the core
+- **AdTech / MarTech:** Mid-to-large companies needing senior technology and product leadership
+- **B2B SaaS (growth stage):** Series B–D companies scaling product and engineering
+- **PE-backed transformations:** Value-creation mandates at PE-owned software companies
+- [Add or remove — any sectors to avoid?]
 
 ### Deal-breakers
-<!-- Hard constraints on job search -->
-- [DEALBREAKER_1]
-- [DEALBREAKER_2]
+- **Role level:** Must be C-suite (CTO, CPO, CPTO), President, or GM — no individual contributor roles
+- **Company type:** Must have a software product in market — no pure services, agencies, or consulting practices
+- **Compensation:** Minimum $600K total cash (base + annual bonus); equity considered separately
+- **Geography (US):** Open to San Francisco/Bay Area, Chicago, New York, Los Angeles, Austin. Off-limits: Florida, Washington DC
+- **Geography (International):** Open to UK, Italy, France, Germany, Scandinavia
+
+---
 
 ## Repo Structure
 - `cv/` - LaTeX CV variants (moderncv template, banking style)

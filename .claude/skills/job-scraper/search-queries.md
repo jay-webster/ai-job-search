@@ -1,76 +1,116 @@
-# Search Queries for Job Scraper
+# Job Scraper Config — Jay Webster
 
-<!-- SETUP: Customize these queries based on your skills, target roles, and location -->
-
-## Search Sites
-
-Primary (Danish job market):
-- **jobindex.dk** - largest Danish job board
-- **linkedin.com/jobs** - LinkedIn job listings (filter: Denmark / your city)
-- **karriere.dk** - IDA's job board (engineering/science roles)
-- **jobfinder.dk** - another major Danish job board
-- **akademikernes.dk** - academic union job board
-
-Secondary (company career pages via Google):
-- Direct Google searches with `site:` filters for known target companies
-
-## Query Categories
-
-Queries are grouped by priority. Each query should be combined with your location terms (e.g. "Copenhagen", "Sjælland", "Hovedstaden") where the site supports it.
-
-### Priority 1: [YOUR_PRIMARY_ROLE_TYPE]
-
-These match your strongest and most desired career direction.
+## Location
 
 ```
-site:jobindex.dk "[YOUR_PRIMARY_JOB_TITLE]" [YOUR_CITY]
-site:jobindex.dk "[YOUR_KEY_SKILL]" [YOUR_CITY]
-site:linkedin.com/jobs "[YOUR_PRIMARY_JOB_TITLE]" [YOUR_COUNTRY]
+PRIMARY_LOCATION=Cincinnati, OH
+REMOTE=true
 ```
 
-### Priority 2: [YOUR_DOMAIN_EXPERTISE]
+Acceptable locations: Cincinnati metro, San Francisco Bay Area, Chicago, New York, Remote.
 
-These match your domain expertise.
+---
 
-```
-site:jobindex.dk [YOUR_DOMAIN_KEYWORD_1] [YOUR_CITY] OR [YOUR_REGION]
-site:jobindex.dk [YOUR_DOMAIN_KEYWORD_2] [YOUR_COUNTRY]
-site:linkedin.com/jobs [YOUR_DOMAIN_KEYWORD_1] [YOUR_CITY] [YOUR_COUNTRY]
-```
+## Query Keywords
 
-### Priority 3: [YOUR_ADJACENT_ROLE_TYPE]
-
-Adjacent roles you could pivot into.
+Priority order. `/scrape` runs P1–P3 by default; `/scrape broad` runs all four.
+`/scrape [focus]` overrides everything with your focus term.
 
 ```
-site:jobindex.dk "[YOUR_ADJACENT_TITLE_1]" [YOUR_KEY_SKILL] [YOUR_CITY]
-site:jobindex.dk "[YOUR_ADJACENT_TITLE_2]" [YOUR_KEY_SKILL] [YOUR_CITY]
+KEYWORDS_P1=Chief Technology Officer
+KEYWORDS_P2=Chief Product Officer agentic AI
+KEYWORDS_P3=President General Manager B2B SaaS
+KEYWORDS_P4=Chief Product and Technology Officer AdTech MarTech
 ```
 
-### Priority 4: Broader Technical / Consulting
+### Notes on keyword choices
+- P1 targets Jay's current title track (CTO at AdRoll)
+- P2 adds "agentic AI" to surface companies specifically building in that space
+- P3 catches President/GM mandates — Jay has held these at Choose Energy and Cision
+- P4 catches the hybrid CPTO title and domain-specific roles
 
-Wider net for general technical roles.
+---
+
+## Greenhouse Target Companies
+
+All checked on every `/scrape` run. Focused on AdTech, AI-native SaaS, and
+growth-stage companies where a CTO/CPO/CPTO would be a strong fit.
 
 ```
-site:jobindex.dk [YOUR_KEY_SKILL] developer [YOUR_CITY]
-site:linkedin.com/jobs "[YOUR_KEY_SKILL] developer" [YOUR_CITY]
-site:jobindex.dk "technical consultant" [YOUR_DOMAIN] [YOUR_CITY]
+GREENHOUSE_COMPANIES=
+  # AdTech / MarTech — verified slugs
+  doubleverify
+  pubmatic
+  braze
+  amplitude
+  iterable
+  klaviyo
+
+  # AI-native / agentic — verified slugs
+  anthropic
+  gleanwork
+
+  # General high-growth SaaS — verified slugs
+  carta
+  brex
+  stripe
+  notion
+  figma
+  lattice
+  rippling
+
+  # Unverified — may need slug correction:
+  # thetradedesk (check: thetradedesk)
+  # criteo (check: criteo)
+  # meltwater (check: meltwater)
+  # sprinklr (check: sprinklr)
+  # cohere (check: cohere-ai)
+  # harvey (check: harveyai)
+
+  # Add your own targets:
+  # [slug]
 ```
 
-## Location Filter
+Keyword filter applied to all Greenhouse results (client-side title match):
 
-When evaluating results, verify the job location is within reasonable commute distance from your home. Define acceptable areas:
-- [YOUR_CITY] and surrounding areas
-- [ACCEPTABLE_AREA_1]
-- [ACCEPTABLE_AREA_2]
-- [BORDERLINE_AREA] (borderline - ~X min by transit)
-- [TOO_FAR_AREA] (too far)
+```
+GREENHOUSE_QUERY=chief
+```
+
+This surfaces CTO, CPO, CPTO, Chief of Staff, Chief Revenue Officer — scan the
+table and filter by judgment. Change to a specific title if you want tighter results.
+
+---
+
+## USAJobs (Federal Government)
+
+Less likely to be primary focus, but included for completeness. Defense/intelligence
+tech agencies do hire senior technology executives.
+
+```
+USAJOBS_KEYWORDS=Chief Technology Officer
+USAJOBS_JOBAGE=14
+```
+
+Set `USAJOBS_KEYWORDS` to empty to skip USAJobs on a given run.
+
+---
 
 ## Date Filter
 
-Only include jobs posted within the last 14 days, or with an application deadline that has not yet passed. If a posting date cannot be determined, include it but flag as "date unknown".
+```
+DEFAULT_JOBAGE=14
+```
 
-## Adapting Queries
+---
 
-If the user specifies a focus area, select queries from the matching category and also generate 2-3 custom queries for that focus. For example:
-- "/scrape [focus_area]" -> relevant category queries + custom focus-specific queries
+## What to fill in before first `/scrape`
+
+The keywords and companies above are ready to use. The only things left to
+personalize are the three open sections in `CLAUDE.md`:
+
+1. **Behavioral Profile → Growth areas** — add 1–2 honest self-assessments
+2. **What Excites You** — add what you actually want in the next chapter
+3. **Deal-breakers** — hard constraints (role level, industry, geography, comp floor)
+
+These feed the fit assessment Claude runs on every result.

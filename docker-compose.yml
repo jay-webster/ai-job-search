@@ -1,0 +1,23 @@
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: job-search-dashboard
+    ports:
+      - "${DASHBOARD_PORT:-3000}:3000"
+    volumes:
+      # Writable — dashboard writes status updates back to seen_jobs.json
+      - ./job_scraper:/app/job_scraper
+      # Read-only — candidate name shown in header; update on host, refresh in browser
+      - ./CLAUDE.md:/app/CLAUDE.md:ro
+      # Read-only — application tracker table
+      - ./job_search_tracker.csv:/app/job_search_tracker.csv:ro
+    environment:
+      DASHBOARD_PORT: "3000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/meta"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
